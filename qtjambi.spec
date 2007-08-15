@@ -11,7 +11,7 @@ License: GPL
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: jpackage-utils
-BuildRequires: java-devel
+BuildRequires: java-devel-icedtea
 BuildRequires: qt4-devel >= 2:4.3.1
 Requires: %libqtjambi = %version
 Requires: qt4-common
@@ -50,7 +50,6 @@ Qt Jambi main libraries.
 %package doc
 Summary: Qt Jambi documentation
 Group: Books/Computer books
-Group: Documentation
 
 %description doc
 Qt Jambi documentation.
@@ -63,7 +62,7 @@ Qt Jambi documentation.
 
 %package launcher
 Summary: Qt Jambi launcher demo
-Group: Dcumentation
+Group: Books/Computer books
 Requires: %name
 Requires: %name-doc
 Requires: java
