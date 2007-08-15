@@ -3,7 +3,7 @@
 
 Name: qtjambi
 Version: 4.3.1
-Release: %mkrel 1
+Release: %mkrel 2
 Summary: Qt Jambi is a cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
 URL: http://trolltech.com/products/qt/jambi
@@ -27,7 +27,7 @@ and provides the assurances of a solid, mature framework.
 %files
 %defattr(-,root,root,-)
 %qt4plugins/qtjambi
-%qt4dir/qtjambi.jar
+%_javadir/*
 
 #-------------------------------------------------------------
 
@@ -65,7 +65,6 @@ Summary: Qt Jambi launcher demo
 Group: Books/Computer books
 Requires: %name
 Requires: %name-doc
-Requires: java
 
 %description launcher
 Qt Jambi launcher demo.
@@ -82,6 +81,7 @@ Group: Development/Java
 Requires: %name
 Requires: qt4-designer >= 4.3.1
 Requires: qt4-devel >= 2:4.3.1
+Requires: java-devel
 
 %description devel
 Qt Jambi devel.
@@ -128,12 +128,16 @@ mkdir -p %buildroot/%qt4dir/bin
 mkdir -p %buildroot/%qt4include
 mkdir -p %buildroot/%qt4lib
 mkdir -p %buildroot/%qt4plugins
+mkdir -p %buildroot/%_javadir
 mkdir -p %buildroot/%_docdir/qtjambi
 mkdir -p %buildroot/%_docdir/qtjambi/com/trolltech
 mkdir -p %buildroot/%_bindir
 
 # Create base jar
-jar cf %buildroot/%qt4dir/qtjambi.jar com/trolltech/qt com/trolltech/tools
+jar cf %buildroot/%_javadir/qtjambi-%version.jar com/trolltech/qt com/trolltech/tools
+pushd %buildroot/%_javadir
+    ln -s qtjambi-%version.jar qtjambi.jar
+popd
 
 cp README %buildroot/%_docdir/qtjambi
 for name in demos examples images launcher manualtests; do
@@ -154,9 +158,9 @@ cat > %buildroot/%_bindir/designer-qtjambi << EOF
 
 export QTDIR=%qt4dir
 export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
-export PATH=$QTDIR/bin:$PATH
+export PATH=%qt4dir/bin:$PATH
 export JAVADIR=%{_jvmdir}/java 
-export CLASSPATH=%qt4dir/qtjambi.jar
+export CLASSPATH=%_javadir/qtjambi.jar
 
 export MOC=%qt4dir/bin/moc
 export UIC=%qt4dir/bin/juic
@@ -171,12 +175,12 @@ cat > %buildroot/%_bindir/qtjambi << EOF
 # Support script to properly set environments for Launcher
 
 export QTDIR=%qt4dir
-export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
-export PATH=$QTDIR/bin:$PATH
-export JAVADIR=%{_jvmdir}/java 
+export LD_LIBRARY_PATH=%qt4lib:$LD_LIBRARY_PATH
+export PATH=%qt4dir/bin:$PATH
+export JAVADIR=%{_jvmdir}/jre
 
 cd %_docdir/qtjambi/
-java -cp %qt4dir/qtjambi.jar:. com.trolltech.launcher.Launcher
+java -cp %_javadir/qtjambi.jar:. com.trolltech.launcher.Launcher
 EOF
 chmod 0755 %buildroot/%_bindir/qtjambi
 
