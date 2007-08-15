@@ -11,7 +11,7 @@ License: GPL
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: jpackage-utils
-BuildRequires: java-devel-icedtea
+BuildRequires: java-devel
 BuildRequires: qt4-devel >= 2:4.3.1
 Requires: %libqtjambi = %version
 Requires: qt4-common
@@ -49,7 +49,8 @@ Qt Jambi main libraries.
 
 %package doc
 Summary: Qt Jambi documentation
-Group: Dcumentation
+Group: Books/Computer books
+Group: Documentation
 
 %description doc
 Qt Jambi documentation.
@@ -101,7 +102,7 @@ Qt Jambi devel.
 
 
 %build
-export JAVADIR=%{_jvmdir}/java-icedtea
+export JAVADIR=%{_jvmdir}/java
 export QTDIR=%qt4dir
 export PATH=%qt4dir/bin:$PATH
 
