@@ -3,9 +3,10 @@
 
 Name: qtjambi
 Version: 4.3.1
-Release: %mkrel 2
+Release: %mkrel 4
 Summary: Qt Jambi is a cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
+Source1: qtjambi-linux32-gpl-doc.tar.bz2
 URL: http://trolltech.com/products/qt/jambi
 License: GPL
 Group: System/Libraries
@@ -27,7 +28,7 @@ and provides the assurances of a solid, mature framework.
 %files
 %defattr(-,root,root,-)
 %qt4plugins/qtjambi
-%_javadir/*
+%_jnidir/*
 
 #-------------------------------------------------------------
 
@@ -128,14 +129,14 @@ mkdir -p %buildroot/%qt4dir/bin
 mkdir -p %buildroot/%qt4include
 mkdir -p %buildroot/%qt4lib
 mkdir -p %buildroot/%qt4plugins
-mkdir -p %buildroot/%_javadir
+mkdir -p %buildroot/%_jnidir
 mkdir -p %buildroot/%_docdir/qtjambi
 mkdir -p %buildroot/%_docdir/qtjambi/com/trolltech
 mkdir -p %buildroot/%_bindir
 
 # Create base jar
-jar cf %buildroot/%_javadir/qtjambi-%version.jar com/trolltech/qt com/trolltech/tools
-pushd %buildroot/%_javadir
+jar cf %buildroot/%_jnidir/qtjambi-%version.jar com/trolltech/qt com/trolltech/tools
+pushd %buildroot/%_jnidir
     ln -s qtjambi-%version.jar qtjambi.jar
 popd
 
@@ -149,7 +150,9 @@ cp -a plugins/* %buildroot/%qt4plugins
 cp -aP lib/* %buildroot/%qt4lib
 cp bin/juic generator/generator %buildroot/%qt4dir/bin
 cp include/* %buildroot/%qt4include
-
+pushd %buildroot/%_docdir/qtjambi/doc
+    tar xfj %SOURCE1
+popd
 
 # DESIGNER WITH JAMBI
 cat > %buildroot/%_bindir/designer-qtjambi << EOF
@@ -160,7 +163,7 @@ export QTDIR=%qt4dir
 export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 export PATH=%qt4dir/bin:$PATH
 export JAVADIR=%{_jvmdir}/java 
-export CLASSPATH=%_javadir/qtjambi.jar
+export CLASSPATH=%_jnidir/qtjambi.jar
 
 export MOC=%qt4dir/bin/moc
 export UIC=%qt4dir/bin/juic
@@ -180,7 +183,7 @@ export PATH=%qt4dir/bin:$PATH
 export JAVADIR=%{_jvmdir}/jre
 
 cd %_docdir/qtjambi/
-java -cp %_javadir/qtjambi.jar:. com.trolltech.launcher.Launcher
+java -cp %_jnidir/qtjambi.jar:. com.trolltech.launcher.Launcher
 EOF
 chmod 0755 %buildroot/%_bindir/qtjambi
 
