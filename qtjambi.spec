@@ -58,21 +58,24 @@ Qt Jambi documentation.
 %files doc
 %defattr(-,root,root,-)
 %_docdir/qtjambi
+%exclude %_docdir/qtjambi/com
 
 #-------------------------------------------------------------
 
-%package launcher
+%package demo
 Summary: Qt Jambi launcher demo
 Group: Books/Computer books
+Obsoletes: qtjambi-launcher
 Requires: %name
 Requires: %name-doc
 
-%description launcher
+%description demo
 Qt Jambi launcher demo.
 
-%files launcher
+%files demo
 %defattr(-,root,root,-)
-%_bindir/qtjambi
+%_bindir/qtjambi-demo
+%_docdir/qtjambi/com
 
 #-------------------------------------------------------------
 
@@ -158,13 +161,10 @@ popd
 cat > %buildroot/%_bindir/designer-qtjambi << EOF
 #!/bin/sh
 # Support script to properly set environments for Designer with Jambi to run
-
 export QTDIR=%qt4dir
-export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
 export PATH=%qt4dir/bin:$PATH
 export JAVADIR=%{_jvmdir}/java 
 export CLASSPATH=%_jnidir/qtjambi.jar
-
 export MOC=%qt4dir/bin/moc
 export UIC=%qt4dir/bin/juic
 
@@ -173,19 +173,14 @@ EOF
 chmod 0755 %buildroot/%_bindir/designer-qtjambi
 
 # LAUNCHER
-cat > %buildroot/%_bindir/qtjambi << EOF
+cat > %buildroot/%_bindir/qtjambi-demo << EOF
 #!/bin/sh
 # Support script to properly set environments for Launcher
-
-export QTDIR=%qt4dir
-export LD_LIBRARY_PATH=%qt4lib:$LD_LIBRARY_PATH
-export PATH=%qt4dir/bin:$PATH
 export JAVADIR=%{_jvmdir}/jre
-
 cd %_docdir/qtjambi/
-java -cp %_jnidir/qtjambi.jar:. com.trolltech.launcher.Launcher
+java -Djava.library.path=%qt4lib -cp %_jnidir/qtjambi.jar:. com.trolltech.launcher.Launcher
 EOF
-chmod 0755 %buildroot/%_bindir/qtjambi
+chmod 0755 %buildroot/%_bindir/qtjambi-demo
 
 %clean
 rm -rf %buildroot
