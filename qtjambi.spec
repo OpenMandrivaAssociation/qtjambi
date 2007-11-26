@@ -1,4 +1,4 @@
-%define pack qtjambi-gpl-src-4.3.1_01
+%define pack qtjambi-gpl-src-4.3.2_01
 %define libqtjambi %mklibname qtjambi 1
 
 Name: qtjambi
@@ -12,7 +12,7 @@ License: GPL
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: jpackage-utils
-BuildRequires: java-devel-icedtea
+BuildRequires: java-devel
 BuildRequires: qt4-devel >= 2:4.3.1
 Requires: %libqtjambi = %version
 Requires: qt4-common
