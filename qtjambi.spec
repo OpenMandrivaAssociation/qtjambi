@@ -2,8 +2,8 @@
 %define libqtjambi %mklibname qtjambi 1
 
 Name: qtjambi
-Version: 4.3.1
-Release: %mkrel 5
+Version: 4.3.2
+Release: %mkrel 1
 Summary: Qt Jambi is a cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
 Source1: qtjambi-linux32-gpl-doc.tar.bz2
@@ -143,8 +143,7 @@ pushd %buildroot/%_jnidir
     ln -s qtjambi-%version.jar qtjambi.jar
 popd
 
-cp README %buildroot/%_docdir/qtjambi
-for name in demos examples images launcher manualtests; do
+for name in demos examples images launcher; do
 	cp -a com/trolltech/$name %buildroot/%_docdir/qtjambi/com/trolltech
 done
 cp -a doc %buildroot/%_docdir/qtjambi
