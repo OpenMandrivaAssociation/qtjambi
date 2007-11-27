@@ -12,7 +12,7 @@ License: GPL
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: jpackage-utils
-BuildRequires: java-devel
+BuildRequires: java-devel-icedtea
 BuildRequires: qt4-devel >= 2:4.3.1
 Requires: %libqtjambi = %version
 Requires: qt4-common
