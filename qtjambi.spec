@@ -17,6 +17,7 @@ BuildRequires: qt4-devel >= 2:4.3.1
 Requires: %libqtjambi = %version
 Requires: qt4-common
 Requires: java
+ExclusiveArch: %{ix86}
 
 %description
 Qt Jambi is a cross-platform, rich client application development framework for Java. It includes
