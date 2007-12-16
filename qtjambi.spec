@@ -3,7 +3,7 @@
 
 Name: qtjambi
 Version: 4.3.3
-Release: %mkrel 1
+Release: %mkrel 2
 Summary: Qt Jambi is a cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
 Source1: qtjambi-linux32-gpl-doc.tar.bz2
@@ -11,7 +11,7 @@ URL: http://trolltech.com/products/qt/jambi
 License: GPL
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
-BuildRequires: jpackage-utils
+BuildRequires: java-rpmbuild
 BuildRequires: java-devel-icedtea
 BuildRequires: qt4-devel >= 2:4.3.1
 Requires: %libqtjambi = %version
