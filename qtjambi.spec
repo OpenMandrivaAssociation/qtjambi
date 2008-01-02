@@ -10,6 +10,7 @@ Source1: qtjambi-linux32-gpl-doc.tar.bz2
 URL: http://trolltech.com/products/qt/jambi
 License: GPL
 Group: System/Libraries
+BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: java-rpmbuild
 BuildRequires: java-devel-icedtea
 BuildRequires: qt4-devel >= 2:4.3.1
