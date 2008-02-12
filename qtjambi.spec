@@ -20,11 +20,12 @@ Requires: java
 ExclusiveArch: %{ix86}
 
 %description
-Qt Jambi is a cross-platform, rich client application development framework for Java. It includes
-a comprehensive class library and integrated development tools for high-end rich client application
-development. To organizations developing high performance, cross-platform desktop applications with
-Java, Qt Jambi increases development efficiency, adds freedom and flexibility to Java development,
-and provides the assurances of a solid, mature framework.
+Qt Jambi is a cross-platform, rich client application development framework for
+Java. It includes a comprehensive class library and integrated development
+tools for high-end rich client application development. To organizations
+developing high performance, cross-platform desktop applications with Java, Qt
+Jambi increases development efficiency, adds freedom and flexibility to Java
+development, and provides the assurances of a solid, mature framework.
 
 %files
 %defattr(-,root,root,-)
