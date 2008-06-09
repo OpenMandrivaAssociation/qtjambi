@@ -38,8 +38,12 @@ development, and provides the assurances of a solid, mature framework.
 Summary: Qt Jambi main libraries
 Group: System/Libraries
 
+%if %mdkversion < 200900
 %post -n %libqtjambi -p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %postun -n %libqtjambi -p /sbin/ldconfig
+%endif
 
 %description -n %libqtjambi
 Qt Jambi main libraries.
