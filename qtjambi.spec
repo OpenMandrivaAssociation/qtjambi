@@ -1,9 +1,9 @@
-%define pack qtjambi-gpl-src-4.3.3_01
+%define pack qtjambi-src-gpl-4.4.0_01
 %define libqtjambi %mklibname qtjambi 1
 
 Name: qtjambi
-Version: 4.3.3
-Release: %mkrel 3
+Version: 4.4.0
+Release: %mkrel 1
 Summary: Cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
 Source1: qtjambi-linux32-gpl-doc.tar.bz2
@@ -12,8 +12,8 @@ License: GPL
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: java-rpmbuild
-BuildRequires: java-devel-icedtea
-BuildRequires: qt4-devel >= 2:4.3.1
+BuildRequires: java-devel
+BuildRequires: qt4-devel >= 2:4.4.0
 Requires: %libqtjambi = %version
 Requires: qt4-common
 Requires: java
