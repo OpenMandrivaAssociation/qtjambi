@@ -6,7 +6,7 @@ Version: 4.4.0
 Release: %mkrel 1
 Summary: Cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
-Source1: qtjambi-linux32-gpl-doc.tar.bz2
+Patch0: qtjambi-src-gpl-4.4.0_01-dirbuild.patch
 URL: http://trolltech.com/products/qt/jambi
 License: GPL
 Group: System/Libraries
@@ -14,10 +14,11 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: java-rpmbuild
 BuildRequires: java-devel
 BuildRequires: qt4-devel >= 2:4.4.0
+BuildRequires: ant
+BuildRequires: ant-trax
 Requires: %libqtjambi = %version
 Requires: qt4-common
 Requires: java
-ExclusiveArch: %{ix86}
 
 %description
 Qt Jambi is a cross-platform, rich client application development framework for
@@ -108,26 +109,17 @@ Qt Jambi devel.
 
 %prep
 %setup -q -n %{pack}
-
+%patch0 -p1 -b .build
 
 %build
 export JAVADIR=%{_jvmdir}/java
 export QTDIR=%qt4dir
+export QTLIBDIR=%qt4lib
+export QTPLUGINDIR=%qt4plugins
 export PATH=%qt4dir/bin:$PATH
 
-# Create generator
-pushd generator
-    qmake
-    %make
-    ./generator
-popd
+ant
 
-qmake -r
-%make
-
-# Make java sources
-bin/juic -cp .
-javac -verbose @java_files
 										
 %install
 rm -rf %buildroot
