@@ -3,7 +3,7 @@
 
 Name: qtjambi
 Version: 4.4.0
-Release: %mkrel 2
+Release: %mkrel 3
 Summary: Cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
 Patch0: qtjambi-src-gpl-4.4.0_01-dirbuild.patch
@@ -44,7 +44,7 @@ Qt Jambi main libraries.
 
 %files -n %libqtjambi
 %defattr(-,root,root,-)
-%qt4lib/*
+%qt4lib/*.so.*
 
 #-------------------------------------------------------------
 
@@ -97,6 +97,7 @@ Qt Jambi devel.
 %qt4dir/bin/generator
 %qt4include/*
 %qt4plugins/designer
+%qt4lib/*.so
 
 #-------------------------------------------------------------
 
