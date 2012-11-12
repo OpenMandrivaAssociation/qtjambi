@@ -1,0 +1,155 @@
+--- qtjambi-src-gpl-4.4.0_01/com/trolltech/tools/ant/InitializeTask.java.build	2008-06-07 20:43:44.000000000 -0300
++++ qtjambi-src-gpl-4.4.0_01/com/trolltech/tools/ant/InitializeTask.java	2008-06-17 18:02:10.000000000 -0300
+@@ -80,6 +80,8 @@
+     public static final String PHONON_QT7       = "qtjambi.phonon_qt7";
+     public static final String QMAKESPEC        = "qtjambi.qmakespec";
+     public static final String QTDIR            = "qtjambi.qtdir";
++    public static final String QTLIBDIR         = "qtjambi.qtlibdir";
++    public static final String QTPLUGINDIR      = "qtjambi.qtplugindir";
+     public static final String SQLITE           = "qtjambi.sqlite";
+     public static final String VERSION          = "qtjambi.version";
+     public static final String WEBKIT           = "qtjambi.webkit";
+@@ -110,6 +112,8 @@
+         props.setNewProperty(null, OSNAME, decideOSName());
+         props.setNewProperty(null, LIBSUBDIR, decideLibSubDir());
+         props.setNewProperty(null, QTDIR, decideQtDir());
++        props.setNewProperty(null, QTLIBDIR, decideQtLibDir());
++        props.setNewProperty(null, QTPLUGINDIR, decideQtPluginDir());
+ 
+         // TODO: Find a better way to get a hold of version...
+         props.setNewProperty(null, VERSION, Version.STRING);
+@@ -313,6 +317,41 @@
+         return qtdir;
+     }
+ 
++	private String decideQtLibDir() {
++        qtlibdir = System.getenv("QTLIBDIR");
++        if (qtlibdir == null)
++		{
++			StringBuilder path = new StringBuilder();
++        	path.append(props.getProperty(null, QTDIR));
++        	path.append("/");
++        	path.append(props.getProperty(null, LIBSUBDIR));
++        	path.append("/");
++			qtlibdir = path.toString();
++		}
++        if (!new File(qtlibdir).exists())
++            throw new BuildException("QTLIBDIR environment variable points to non-existing directory");
++        if (verbose) System.out.println("qtjambi.qtlibdir: " + qtlibdir);
++        return qtlibdir;
++    }
++
++	private String decideQtPluginDir() {
++        StringBuilder path = new StringBuilder();
++        qtplugindir = System.getenv("QTPLUGINDIR");
++        if ( qtplugindir == null)
++		{
++			path.append(props.getProperty(null, QTDIR));
++			path.append("/plugins/");
++		}
++		else
++		{	
++			path.append( qtplugindir );
++			path.append( "/" );
++		}
++		qtplugindir = path.toString();
++        if (verbose) System.out.println("qtjambi.qtplugindir: " + qtplugindir);
++        return qtplugindir;
++    }
++
+     private String decideConfiguration() {
+         String result = null;
+ 
+@@ -324,19 +363,12 @@
+     }
+ 
+     private boolean doesQtLibExist(String name, int version) {
+-        StringBuilder path = new StringBuilder();
+-        path.append(props.getProperty(null, QTDIR));
+-        path.append("/");
+-        path.append(props.getProperty(null, LIBSUBDIR));
+-        path.append("/");
+-        path.append(LibraryEntry.formatQtName(name, debug, version));
+-        return new File(path.toString()).exists();
++        return new File(qtlibdir).exists();
+     }
+ 
+     private boolean doesQtPluginExist(String name, String subdir) {
+         StringBuilder path = new StringBuilder();
+-        path.append(props.getProperty(null, QTDIR));
+-        path.append("/plugins/");
++        path.append(qtplugindir);
+         path.append(subdir);
+         path.append("/");
+         path.append(LibraryEntry.formatUnversionedPluginName(name, debug));
+@@ -381,5 +413,7 @@
+     private boolean debug;
+     private String qmakespec;
+     private String qtdir;
++    private String qtlibdir;
++    private String qtplugindir;
+     private String libSubDir;
+ }
+--- qtjambi-src-gpl-4.4.0_01/build.xml.orig	2008-06-17 18:09:39.000000000 -0300
++++ qtjambi-src-gpl-4.4.0_01/build.xml	2008-06-17 18:12:23.000000000 -0300
+@@ -284,34 +284,34 @@
+                               outdir="${outputDir}/platform-output">
+ 
+             <!-- Qt Libraries... -->
+-            <library name="QtCore"    type="qt" rootPath="${qtjambi.qtdir}" />
+-            <library name="QtGui"     type="qt" rootPath="${qtjambi.qtdir}" />
+-            <library name="QtXml"     type="qt" rootPath="${qtjambi.qtdir}" />
+-            <library name="QtSql"     type="qt" rootPath="${qtjambi.qtdir}" />
+-            <library name="QtSvg"     type="qt" rootPath="${qtjambi.qtdir}" load="yes" />
+-            <library name="QtNetwork" type="qt" rootPath="${qtjambi.qtdir}" />
+-            <library name="QtOpenGL"  type="qt" rootPath="${qtjambi.qtdir}" if="${qtjambi.opengl}"/>
+-            <library name="QtWebKit"  type="qt" rootPath="${qtjambi.qtdir}" if="${qtjambi.webkit}"/>
+-            <library name="QtXmlPatterns" type="qt" rootPath="${qtjambi.qtdir}" if="${qtjambi.xmlpatterns}"/>
+-            <library name="phonon"    type="qt" rootPath="${qtjambi.qtdir}" if="${qtjambi.phonon}"/>
+-            <library name="QtDBus"    type="qt" rootPath="${qtjambi.qtdir}" if="${qtjambi.dbus}"/>
+-            <library name="phonon_ds9" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/phonon_backend" load="never" if="${qtjambi.phonon_ds9}" />
+-            <library name="phonon_gstreamer" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/phonon_backend" load="never" if="${qtjambi.phonon_gstreamer}" />
+-            <library name="phonon_qt7" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/phonon_backend" load="never" if="${qtjambi.phonon_qt7}" />
++            <library name="QtCore"    type="qt" rootPath="${qtjambi.qtlibdir}" />
++            <library name="QtGui"     type="qt" rootPath="${qtjambi.qtlibdir}" />
++            <library name="QtXml"     type="qt" rootPath="${qtjambi.qtlibdir}" />
++            <library name="QtSql"     type="qt" rootPath="${qtjambi.qtlibdir}" />
++            <library name="QtSvg"     type="qt" rootPath="${qtjambi.qtlibdir}" load="yes" />
++            <library name="QtNetwork" type="qt" rootPath="${qtjambi.qtlibdir}" />
++            <library name="QtOpenGL"  type="qt" rootPath="${qtjambi.qtlibdir}" if="${qtjambi.opengl}"/>
++            <library name="QtWebKit"  type="qt" rootPath="${qtjambi.qtlibdir}" if="${qtjambi.webkit}"/>
++            <library name="QtXmlPatterns" type="qt" rootPath="${qtjambi.qtlibdir}" if="${qtjambi.xmlpatterns}"/>
++            <library name="phonon"    type="qt" rootPath="${qtjambi.qtlibdir}" if="${qtjambi.phonon}"/>
++            <library name="QtDBus"    type="qt" rootPath="${qtjambi.qtlibdir}" if="${qtjambi.dbus}"/>
++            <library name="phonon_ds9" type="plugin" rootPath="${qtjambi.qtlibdir}" subdir="plugins/phonon_backend" load="never" if="${qtjambi.phonon_ds9}" />
++            <library name="phonon_gstreamer" type="plugin" rootPath="${qtjambi.qtlibdir}" subdir="plugins/phonon_backend" load="never" if="${qtjambi.phonon_gstreamer}" />
++            <library name="phonon_qt7" type="plugin" rootPath="${qtjambi.qtlibdir}" subdir="plugins/phonon_backend" load="never" if="${qtjambi.phonon_qt7}" />
+ 
+             <!-- Qt Plugins... -->
+-            <library name="qjpeg" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/imageformats" load="never"/>
+-            <library name="qgif" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/imageformats" load="never"/>
+-            <library name="qmng" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/imageformats" load="never"/>
+-            <library name="qtiff" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/imageformats" load="never"/>
+-            <library name="qsvg" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/imageformats" load="never"/>
+-            <library name="qsvgicon" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/iconengines" load="never"/>
+-            <library name="qcncodecs" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/codecs" load="never" />
+-            <library name="qjpcodecs" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/codecs" load="never" />
+-            <library name="qkrcodecs" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/codecs" load="never" />
+-            <library name="qtwcodecs" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/codecs" load="never" />
+-            <library name="qtaccessiblewidgets" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/accessible" load="never"/>
+-            <library name="qsqlite" type="plugin" rootPath="${qtjambi.qtdir}" subdir="plugins/sqldrivers" load="never" if="${qtjambi.sqlite}" />
++            <library name="qjpeg" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/imageformats" load="never"/>
++            <library name="qgif" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/imageformats" load="never"/>
++            <library name="qmng" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/imageformats" load="never"/>
++            <library name="qtiff" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/imageformats" load="never"/>
++            <library name="qsvg" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/imageformats" load="never"/>
++            <library name="qsvgicon" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/iconengines" load="never"/>
++            <library name="qcncodecs" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/codecs" load="never" />
++            <library name="qjpcodecs" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/codecs" load="never" />
++            <library name="qkrcodecs" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/codecs" load="never" />
++            <library name="qtwcodecs" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/codecs" load="never" />
++            <library name="qtaccessiblewidgets" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/accessible" load="never"/>
++            <library name="qsqlite" type="plugin" rootPath="${qtjambi.qtplugindir}" subdir="plugins/sqldrivers" load="never" if="${qtjambi.sqlite}" />
+ 
+             <!-- Qt Jambi Libraries -->
+             <library name="qtjambi"                  type="qtjambi" rootPath="${outputDir}" />
