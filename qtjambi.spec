@@ -7,7 +7,7 @@ Release: %mkrel 3
 Summary: Cross-platform, rich client application development framework for Java
 Source: %{pack}.tar.gz
 Patch0: qtjambi-src-gpl-4.4.0_01-dirbuild.patch
-URL: http://trolltech.com/products/qt/jambi
+URL: https://trolltech.com/products/qt/jambi
 License: GPL
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
